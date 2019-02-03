@@ -1,7 +1,9 @@
 package org.panch.servlets;
 
 
+import org.panch.dao.DepartmentDAO;
 import org.panch.dao.EmployeeDAO;
+import org.panch.entity.Department;
 import org.panch.entity.Employee;
 
 import java.io.IOException;
@@ -20,26 +22,31 @@ public class EmployeeServlet extends HttpServlet {
     }
 
     @Override
-    public void doGet(HttpServletRequest request,
-                      HttpServletResponse response)
-            throws ServletException, IOException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int page = 1;
         int recordsPerPage = 5;
+        int depid = 1;
         if(request.getParameter("page") != null) {
             page = Integer.parseInt(request.getParameter("page"));
         }
         if(request.getParameter("recordsPerPage") != null){
             recordsPerPage = Integer.parseInt(request.getParameter("recordsPerPage"));
         }
-        EmployeeDAO dao = new EmployeeDAO();
-        List<Employee> list = dao.viewAllEmployees((page-1)*recordsPerPage,
-                recordsPerPage);
-        int noOfRecords = dao.getNoOfRecords();
+        if(request.getParameter("depid") != null){
+            depid = Integer.parseInt(request.getParameter("depid"));
+        }
+        DepartmentDAO departmentDAO = new DepartmentDAO();
+        List<Department> departments = departmentDAO.getAll();
+        EmployeeDAO employeeDAO = new EmployeeDAO();
+        List<Employee> employees = employeeDAO.viewAllEmployees(depid, (page-1)*recordsPerPage, recordsPerPage);
+        int noOfRecords = employeeDAO.getNoOfRecords();
         int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
-        request.setAttribute("employeeList", list);
+        request.setAttribute("departmentList", departments);
+        request.setAttribute("employeeList", employees);
         request.setAttribute("noOfPages", noOfPages);
         request.setAttribute("currentPage", page);
         request.setAttribute("recordsPerPage", recordsPerPage);
+        request.setAttribute("depid", depid);
         RequestDispatcher view = request.getRequestDispatcher("display.jsp");
         view.forward(request, response);
     }

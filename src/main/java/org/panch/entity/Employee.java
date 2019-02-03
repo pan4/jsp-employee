@@ -4,15 +4,15 @@ public class Employee {
     int employeeId;
     String employeeName;
     int salary;
-    String deptName;
+//    String deptName;
 
-    public String getDeptName() {
-        return deptName;
-    }
-
-    public void setDeptName(String deptName) {
-        this.deptName = deptName;
-    }
+//    public String getDeptName() {
+//        return deptName;
+//    }
+//
+//    public void setDeptName(String deptName) {
+//        this.deptName = deptName;
+//    }
 
     public int getEmployeeId() {
         return employeeId;

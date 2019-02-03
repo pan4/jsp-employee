@@ -17,35 +17,40 @@ public class EmployeeDAO {
 
     public EmployeeDAO() { }
 
-    private static Connection getConnection() throws SQLException
-    {
+    private static Connection getConnection() throws SQLException {
         Connection con = ConnectionFactory.getConnection();
         return con;
     }
 
-    public List<Employee> viewAllEmployees(
-            int offset,
-            int noOfRecords)
-    {
-        String query = "select * from employee limit "
-                + noOfRecords + " offset " + offset;
+    public List<Employee> viewAllEmployees(int depid, int offset, int noOfRecords) {
+
+        String select_query = "select e.EMPID, e.EMPNAME, e.EMPSALARY from employee e" +
+                " join department d on (e.depid = d.depid)" +
+                " where d.depid = " + depid +
+                " order by e.EMPSALARY desc" +
+                " limit " + noOfRecords +
+                " offset " + offset;
+;
+
         List<Employee> list = new ArrayList<Employee>();
         Employee employee = null;
         try {
             connection = getConnection();
             stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery(query);
+            ResultSet rs = stmt.executeQuery(select_query);
             while (rs.next()) {
                 employee = new Employee();
                 employee.setEmployeeId(rs.getInt(1));
                 employee.setEmployeeName(rs.getString(2));
                 employee.setSalary(rs.getInt(3));
-                employee.setDeptName(rs.getString(4));
+//                employee.setDeptName(rs.getString(4));
                 list.add(employee);
             }
             rs.close();
-
-            rs = stmt.executeQuery("select count(*) from employee");
+            String count_query = "select count(*) from employee e" +
+                    " join department d on (e.depid = d.depid)" +
+                    " where d.depid = " + depid;
+            rs = stmt.executeQuery(count_query);
             if(rs.next())
                 this.noOfRecords = rs.getInt(1);
         } catch (SQLException e) {

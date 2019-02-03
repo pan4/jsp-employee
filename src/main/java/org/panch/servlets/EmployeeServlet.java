@@ -25,8 +25,12 @@ public class EmployeeServlet extends HttpServlet {
             throws ServletException, IOException {
         int page = 1;
         int recordsPerPage = 5;
-        if(request.getParameter("page") != null)
+        if(request.getParameter("page") != null) {
             page = Integer.parseInt(request.getParameter("page"));
+        }
+        if(request.getParameter("recordsPerPage") != null){
+            recordsPerPage = Integer.parseInt(request.getParameter("recordsPerPage"));
+        }
         EmployeeDAO dao = new EmployeeDAO();
         List<Employee> list = dao.viewAllEmployees((page-1)*recordsPerPage,
                 recordsPerPage);
@@ -35,6 +39,7 @@ public class EmployeeServlet extends HttpServlet {
         request.setAttribute("employeeList", list);
         request.setAttribute("noOfPages", noOfPages);
         request.setAttribute("currentPage", page);
+        request.setAttribute("recordsPerPage", recordsPerPage);
         RequestDispatcher view = request.getRequestDispatcher("display.jsp");
         view.forward(request, response);
     }

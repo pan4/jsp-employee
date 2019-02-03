@@ -30,7 +30,7 @@
 
     <%--For displaying Previous link except for the 1st page --%>
     <c:if test="${currentPage != 1}">
-        <td><a href="employee.do?page=${currentPage - 1}">Previous</a></td>
+        <td><a href="employee.do?page=${currentPage - 1}&recordsPerPage=${recordsPerPage}">Previous</a></td>
     </c:if>
 
     <%--For displaying Page numbers.
@@ -43,7 +43,7 @@
                         <td>${i}</td>
                     </c:when>
                     <c:otherwise>
-                        <td><a href="employee.do?page=${i}">${i}</a></td>
+                        <td><a href="employee.do?page=${i}&recordsPerPage=${recordsPerPage}">${i}</a></td>
                     </c:otherwise>
                 </c:choose>
             </c:forEach>
@@ -52,7 +52,7 @@
 
     <%--For displaying Next link --%>
     <c:if test="${currentPage lt noOfPages}">
-        <td><a href="employee.do?page=${currentPage + 1}">Next</a></td>
+        <td><a href="employee.do?page=${currentPage + 1}&recordsPerPage=${recordsPerPage}">Next</a></td>
     </c:if>
 
 </body>

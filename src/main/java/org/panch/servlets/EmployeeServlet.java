@@ -26,6 +26,7 @@ public class EmployeeServlet extends HttpServlet {
         int page = 1;
         int recordsPerPage = 5;
         int depid = 1;
+        int empid = -1;
         if(request.getParameter("page") != null) {
             page = Integer.parseInt(request.getParameter("page"));
         }
@@ -35,9 +36,15 @@ public class EmployeeServlet extends HttpServlet {
         if(request.getParameter("depid") != null){
             depid = Integer.parseInt(request.getParameter("depid"));
         }
+        if(request.getParameter("empid") != null){
+            empid = Integer.parseInt(request.getParameter("empid"));
+        }
         DepartmentDAO departmentDAO = new DepartmentDAO();
         List<Department> departments = departmentDAO.getAll();
         EmployeeDAO employeeDAO = new EmployeeDAO();
+        if(empid > 0){
+            employeeDAO.delete(empid);
+        }
         List<Employee> employees = employeeDAO.viewAllEmployees(depid, (page-1)*recordsPerPage, recordsPerPage);
         int noOfRecords = employeeDAO.getNoOfRecords();
         int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);

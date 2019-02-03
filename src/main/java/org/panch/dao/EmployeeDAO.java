@@ -4,6 +4,7 @@ import org.panch.entity.Employee;
 import org.panch.util.ConnectionFactory;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -11,11 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EmployeeDAO {
+    private static final String DELETE_QUERY = "DELETE FROM EMPLOYEE WHERE EMPID = ?";
+
     Connection connection;
     Statement stmt;
     private int noOfRecords;
 
-    public EmployeeDAO() { }
+    public EmployeeDAO() {
+    }
 
     private static Connection getConnection() throws SQLException {
         Connection con = ConnectionFactory.getConnection();
@@ -30,7 +34,6 @@ public class EmployeeDAO {
                 " order by e.EMPSALARY desc" +
                 " limit " + noOfRecords +
                 " offset " + offset;
-;
 
         List<Employee> list = new ArrayList<Employee>();
         Employee employee = null;
@@ -51,16 +54,15 @@ public class EmployeeDAO {
                     " join department d on (e.depid = d.depid)" +
                     " where d.depid = " + depid;
             rs = stmt.executeQuery(count_query);
-            if(rs.next())
+            if (rs.next())
                 this.noOfRecords = rs.getInt(1);
         } catch (SQLException e) {
             e.printStackTrace();
-        }finally
-        {
+        } finally {
             try {
-                if(stmt != null)
+                if (stmt != null)
                     stmt.close();
-                if(connection != null)
+                if (connection != null)
                     connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -71,5 +73,26 @@ public class EmployeeDAO {
 
     public int getNoOfRecords() {
         return noOfRecords;
+    }
+
+    public void delete(int empid) {
+        try {
+            connection = getConnection();
+            stmt = connection.prepareStatement(DELETE_QUERY);
+            ((PreparedStatement) stmt).setInt(1, empid);
+            ((PreparedStatement) stmt).executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (stmt != null)
+                    stmt.close();
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 }

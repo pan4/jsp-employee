@@ -28,12 +28,14 @@
             <th>Emp ID</th>
             <th>Emp Name</th>
             <th>Salary</th>
+            <th>Action</th>
         </tr>
         <c:forEach var="employee" items="${employeeList}">
             <tr>
                 <td>${employee.employeeId}</td>
                 <td>${employee.employeeName}</td>
                 <td>${employee.salary}</td>
+                <td><a data-method="delete" href="employee.do?page=${currentPage}&recordsPerPage=${recordsPerPage}&depid=${depid}&empid=${employee.employeeId}">Remove</a></td>
             </tr>
         </c:forEach>
     </table>

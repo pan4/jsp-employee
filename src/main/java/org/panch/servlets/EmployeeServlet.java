@@ -5,6 +5,7 @@ import org.panch.dao.DepartmentDAO;
 import org.panch.dao.EmployeeDAO;
 import org.panch.entity.Department;
 import org.panch.entity.Employee;
+import org.panch.util.UserType;
 
 import java.io.IOException;
 import java.util.List;
@@ -15,11 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class EmployeeServlet extends HttpServlet {
-    private static final long serialVersionUID = 1L;
-
-    public EmployeeServlet() {
-        super();
-    }
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -42,7 +38,7 @@ public class EmployeeServlet extends HttpServlet {
         DepartmentDAO departmentDAO = new DepartmentDAO();
         List<Department> departments = departmentDAO.getAll();
         EmployeeDAO employeeDAO = new EmployeeDAO();
-        if(empid > 0){
+        if(empid > 0 && UserType.Admin.equals(request.getSession().getAttribute("userType"))){
             employeeDAO.delete(empid);
         }
         List<Employee> employees = employeeDAO.viewAllEmployees(depid, (page-1)*recordsPerPage, recordsPerPage);

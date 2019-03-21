@@ -25,9 +25,9 @@
     <br/>
     <table border="1" cellpadding="5" cellspacing="5">
         <tr>
-            <th>Emp ID</th>
-            <th>Emp Name</th>
-            <th>Salary</th>
+            <td><a href="employee.do?page=${currentPage}&recordsPerPage=${recordsPerPage}&depid=${depid}&sort=empid">Emp ID</a></td>
+            <td><a href="employee.do?page=${currentPage}&recordsPerPage=${recordsPerPage}&depid=${depid}&sort=empname">Emp Name</a></td>
+            <td><a href="employee.do?page=${currentPage}&recordsPerPage=${recordsPerPage}&depid=${depid}&sort=empsalary">Salary</a></td>
             <th>Action</th>
         </tr>
         <c:forEach var="employee" items="${employeeList}">
@@ -35,7 +35,7 @@
                 <td>${employee.employeeId}</td>
                 <td>${employee.employeeName}</td>
                 <td>${employee.salary}</td>
-                <td><a data-method="delete" href="employee.do?page=${currentPage}&recordsPerPage=${recordsPerPage}&depid=${depid}&empid=${employee.employeeId}">Remove</a></td>
+                <td><a href="employee.do?page=${currentPage}&recordsPerPage=${recordsPerPage}&depid=${depid}&empid=${employee.employeeId}">Remove</a></td>
             </tr>
         </c:forEach>
     </table>

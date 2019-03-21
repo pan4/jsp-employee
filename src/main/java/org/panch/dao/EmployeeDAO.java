@@ -26,12 +26,11 @@ public class EmployeeDAO {
         return con;
     }
 
-    public List<Employee> viewAllEmployees(int depid, int offset, int noOfRecords) {
+    public List<Employee> viewAllEmployees(int depid, int offset, int noOfRecords, String sort, String orderBy) {
 
         String select_query = "select e.EMPID, e.EMPNAME, e.EMPSALARY from employee e" +
-                " join department d on (e.depid = d.depid)" +
-                " where d.depid = " + depid +
-                " order by e.EMPSALARY desc" +
+                " where e.depid = " + depid +
+                " order by " + sort + " " + orderBy +
                 " limit " + noOfRecords +
                 " offset " + offset;
 

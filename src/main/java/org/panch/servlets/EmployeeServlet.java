@@ -14,6 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 public class EmployeeServlet extends HttpServlet {
 
@@ -23,6 +24,8 @@ public class EmployeeServlet extends HttpServlet {
         int recordsPerPage = 5;
         int depid = 1;
         int empid = -1;
+        String sort = "empid";
+        String order = "ASC";
         if(request.getParameter("page") != null) {
             page = Integer.parseInt(request.getParameter("page"));
         }
@@ -35,13 +38,19 @@ public class EmployeeServlet extends HttpServlet {
         if(request.getParameter("empid") != null){
             empid = Integer.parseInt(request.getParameter("empid"));
         }
+        if(request.getParameter("sort") != null){
+            sort = request.getParameter("sort");
+            request.getSession().setAttribute("sort", sort);
+            order = getOrder(sort, request.getSession());
+            request.getSession().setAttribute("order", order);
+        }
         DepartmentDAO departmentDAO = new DepartmentDAO();
         List<Department> departments = departmentDAO.getAll();
         EmployeeDAO employeeDAO = new EmployeeDAO();
         if(empid > 0 && UserType.Admin.equals(request.getSession().getAttribute("userType"))){
             employeeDAO.delete(empid);
         }
-        List<Employee> employees = employeeDAO.viewAllEmployees(depid, (page-1)*recordsPerPage, recordsPerPage);
+        List<Employee> employees = employeeDAO.viewAllEmployees(depid, (page-1)*recordsPerPage, recordsPerPage, sort, order);
         int noOfRecords = employeeDAO.getNoOfRecords();
         int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
         request.setAttribute("departmentList", departments);
@@ -52,5 +61,22 @@ public class EmployeeServlet extends HttpServlet {
         request.setAttribute("depid", depid);
         RequestDispatcher view = request.getRequestDispatcher("display.jsp");
         view.forward(request, response);
+    }
+
+    private String getOrder(String sort, HttpSession session){
+        String sort1 = (String)session.getAttribute("sort");
+        String order = (String)session.getAttribute("order");
+        if(sort1 == null || order == null){
+            return "DESC";
+        }
+        if(sort1.equals(sort)){
+            if(order.equals("ASC")) {
+                return "DESC";
+            } else {
+                return "ASC";
+            }
+        } else {
+            return "ASC";
+        }
     }
 }
